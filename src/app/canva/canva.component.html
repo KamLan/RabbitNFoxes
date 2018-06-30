@@ -13,23 +13,23 @@
       <form>
           <div class="form-group">
             <label>Choose population size</label>
-            <input type="number" class="form-control"  placeholder="Enter rabbit population">
-            <input type="number" class="form-control"  placeholder="Enter fox population">
+            <input type="number" #rabbitPop class="form-control"  placeholder="Enter rabbit population">
+            <input type="number" #foxesPop class="form-control"  placeholder="Enter fox population">
           </div>
           <div class="form-group">
             <label>Choose population rebirth rate</label>
-            <input type="number" class="form-control" placeholder="Enter rabbit rebirth rate">
+            <input type="number" #rabbitRebirth class="form-control" placeholder="Enter rabbit rebirth rate">
             <!-- <input type="number" class="form-control" placeholder="Enter fox rebirth rate"> -->
           </div>
           <div class="form-group">
             <label>Choose spot distance</label>
-            <input type="number" class="form-control" placeholder="Enter fox spot distance of a prey">
+            <input type="number" #distancePrey class="form-control" placeholder="Enter fox spot distance of a prey">
           </div>
           <div class="form-group">
             <label>Choose time before a fox die of hunger</label>
-            <input type="number" class="form-control" placeholder="Enter fox time before death from hunger">
+            <input type="number" #deathHunger class="form-control" placeholder="Enter fox time before death from hunger">
           </div>
       </form>
-      <button (click)="editParameters()" class="btn btn-primary">Submit</button>
+      <button (click)="editParameters(rabbitPop.value, foxesPop.value, rabbitRebirth.value, distancePrey.value, deathHunger.value)" class="btn btn-primary">Submit</button>
   </div>
 </div>
