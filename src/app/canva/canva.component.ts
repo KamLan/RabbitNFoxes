@@ -18,6 +18,7 @@ export class CanvaComponent implements OnInit {
 
   constructor() { }
 
+  //Comportement au lancement
   ngOnInit() {
     this.CreateCanva();
     this.CreateRabbit(30)
@@ -39,9 +40,14 @@ export class CanvaComponent implements OnInit {
     }
   }
 
+  //Regénère des populations
   regenPopulations(){
     this.CreateRabbit(30)
     this.CreateFox(5)
+  }
+
+  editParameters(){
+    console.log("parameters changed")
   }
 
   //fonction pour mettre en place le canva
@@ -90,8 +96,8 @@ export class CanvaComponent implements OnInit {
   CreateRabbit(nombre){
     for(var i = 0; i <= nombre - 1; i++ ){
       this.rabbitId++
-      var x = Math.floor(Math.random() * 500) + 1
-      var y = Math.floor(Math.random() * 500) + 1
+      var x = Math.floor(Math.random() * 1000) + 1
+      var y = Math.floor(Math.random() * 1000) + 1
       var name = "Rabbit"+this.rabbitId
       var arrayRabbit = []
       arrayRabbit.push(name, x, y)
@@ -107,7 +113,7 @@ export class CanvaComponent implements OnInit {
   CreateFox(nombre){
     for(var i = 0; i <= nombre - 1; i++ ){
       var x = Math.floor(Math.random() * 1000) + 1
-      var y = Math.floor(Math.random() * 500) + 1
+      var y = Math.floor(Math.random() * 1000) + 1
       var name = "Fox"+this.rabbitId
       var arrayFox = []
       arrayFox.push(name, x, y)
