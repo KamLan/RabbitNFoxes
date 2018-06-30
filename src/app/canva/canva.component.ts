@@ -23,7 +23,7 @@ export class CanvaComponent implements OnInit {
     this.CreateCanva();
     this.CreateRabbit(30)
     this.CreateFox(5)
-
+    setInterval(this.MoveRandom.bind(this, false), 500)
     console.log("Rabbits pop", this.arrayRabbits)
     console.log("Foxes pop", this.arrayFoxes)
   }
@@ -57,6 +57,11 @@ export class CanvaComponent implements OnInit {
     this.myCanva.height = 1000
   }
 
+  MoveRandom(){
+    this.MoveRandomFox()
+    this.MoveRandomRabbit()
+  }
+
   //fonction pour généré un mouvement aléatoire lapin
   MoveRandomRabbit(){
     console.log("Rabbit pop avant mouvement", this.arrayRabbits)
@@ -72,19 +77,28 @@ export class CanvaComponent implements OnInit {
     }
     console.log("Rabbit pop après mouvement",this.arrayRabbits)
     context.fillStyle = "green";
-    context.fillRect(x,y, 4, 4);
+    for(var j= 0; j <= this.arrayRabbits.length - 1; j++){
+      context.fillRect(this.arrayRabbits[j][1],this.arrayRabbits[j][2], 4, 4);
+    }
   }
 
   //fonction pour généré un mouvement aléatoire renard
-  MoveRandomFox(context, x, y){
-    for(var i= 0; i <= this.arrayFoxes.length; i++){
-      var x = this.arrayFoxes[i][1]+(Math.floor(Math.random() * 1) - 1)
-      var y = this.arrayFoxes[i][2]+(Math.floor(Math.random() * 1) - 1)
-      this.arrayFoxes[i]=this.arrayFoxes[i][0], x, y
+  MoveRandomFox(){
+    console.log("Foxes pop avant mouvement", this.arrayFoxes)
+    for(var i= 0; i <= this.arrayFoxes.length - 1; i++){
+      var context
+      context = this.myCanva.getContext('2d');
+      context.clearRect(this.arrayFoxes[i][1], this.arrayFoxes[i][2], 4, 4)
+      var x = this.arrayFoxes[i][1] + (Math.random() < 0.5 ? -1 : 1);
+      var y = this.arrayFoxes[i][2] + (Math.random() < 0.5 ? -1 : 1);
+      this.arrayFoxes[i][1] = x
+      this.arrayFoxes[i][2] = y
     }
-    context.clearRect(x, y, 4, 4)
+    console.log("Foxes pop après mouvement",this.arrayRabbits)
     context.fillStyle = "red";
-    context.fillRect(x,y, 4, 4);
+    for(var j= 0; j <= this.arrayFoxes.length - 1; j++){
+      context.fillRect(this.arrayFoxes[j][1], this.arrayFoxes[j][2], 4, 4);
+    }
   }
 
   //Fonction pour généré un mouvement vers le lapin après repérage
@@ -92,7 +106,7 @@ export class CanvaComponent implements OnInit {
 
   }
 
-  //fonction pour créer un lapin
+  //fonction pour créer une population de lapins
   CreateRabbit(nombre){
     for(var i = 0; i <= nombre - 1; i++ ){
       this.rabbitId++
@@ -109,7 +123,7 @@ export class CanvaComponent implements OnInit {
     }
   }
 
-  //fonction pour créer un renard
+  //fonction pour créer une population de renards
   CreateFox(nombre){
     for(var i = 0; i <= nombre - 1; i++ ){
       var x = Math.floor(Math.random() * 1000) + 1
