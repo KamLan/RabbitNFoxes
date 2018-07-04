@@ -13,6 +13,7 @@ export class CanvaComponent implements OnInit {
   ranNum = 0;
   context;
   rabbitId = 0;
+  foxId = 0;
   arrayRabbits = [];
   arrayFoxes = [];
   intervalMove;
@@ -217,9 +218,10 @@ export class CanvaComponent implements OnInit {
   // fonction pour créer une population de renards
   CreateFox(nombre) {
     for (let i = 0; i <= nombre - 1; i++) {
+      this.foxId++;
       let x = Math.floor(Math.random() * 500) + 1;
       let y = Math.floor(Math.random() * 500) + 1;
-      let name = 'Fox' + this.rabbitId;
+      let name = 'Fox' + this.foxId;
       let arrayFox = [];
       arrayFox.push(name, x, y);
       this.arrayFoxes.push(arrayFox);
