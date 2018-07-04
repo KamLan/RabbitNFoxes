@@ -103,8 +103,8 @@ export class CanvaComponent implements OnInit {
     context = this.myCanva.getContext('2d');
     for (let i = 0; i <= this.arrayRabbits.length - 1; i++) {
       context.clearRect(this.arrayRabbits[i][1], this.arrayRabbits[i][2], 4, 4);
-      const x = this.arrayRabbits[i][1] + this.getRandomInt(-10, 10);
-      const y = this.arrayRabbits[i][2] + this.getRandomInt(-10, 10);
+      let x = this.arrayRabbits[i][1] + this.getRandomInt(-10, 10);
+      let y = this.arrayRabbits[i][2] + this.getRandomInt(-10, 10);
       this.arrayRabbits[i][1] = x;
       this.arrayRabbits[i][2] = y;
     }
@@ -119,8 +119,23 @@ export class CanvaComponent implements OnInit {
   MoveRandomFox() {
     // console.log("Foxes pop avant mouvement", this.arrayFoxes)
     let context;
+    let find;
     context = this.myCanva.getContext('2d');
     for (let i = 0; i <= this.arrayFoxes.length - 1; i++) {
+      find = 0;
+      for (let j = 0; j <= this.arrayRabbits.length - 1; j++) {
+        if (find !== 0) {
+          if (this.arrayRabbits[j][1] <= this.arrayFoxes[i][1] + 4 && this.arrayRabbits[j][2] <= this.arrayFoxes[i][2] + 4) {
+
+            find = 1;
+          }
+          if (this.arrayRabbits[j][1] <= this.arrayFoxes[i][1] - 4 && this.arrayRabbits[j][2] <= this.arrayFoxes[i][2] - 4) {
+
+            find = 1;
+          }
+        }
+      }
+
       context.clearRect(this.arrayFoxes[i][1], this.arrayFoxes[i][2], 4, 4);
       const x = this.arrayFoxes[i][1] + this.getRandomInt(-10, 10);
       const y = this.arrayFoxes[i][2] + this.getRandomInt(-10, 10);
@@ -139,8 +154,8 @@ export class CanvaComponent implements OnInit {
     // TODO
     for (let i = 0; i <= this.arrayFoxes.length - 1; i++) {
       for (let j = 0; j <= this.arrayRabbits.length - 1; j++) {
-        const x = Math.abs(this.arrayFoxes[i][1] - this.arrayRabbits[j][1]);
-        const y = Math.abs(this.arrayFoxes[i][2] - this.arrayRabbits[j][2]);
+        let x = Math.abs(this.arrayFoxes[i][1] - this.arrayRabbits[j][1]);
+        let y = Math.abs(this.arrayFoxes[i][2] - this.arrayRabbits[j][2]);
         if (x <= 5 && y <= 5) {
           console.log('Fox has spoted a rabbit');
         }
@@ -186,9 +201,9 @@ export class CanvaComponent implements OnInit {
   CreateRabbit(nombre) {
     for (let i = 0; i <= nombre - 1; i++) {
       this.rabbitId++;
-      const x = Math.floor(Math.random() * 500) + 1;
-      const y = Math.floor(Math.random() * 500) + 1;
-      const name = 'Rabbit' + this.rabbitId;
+      let x = Math.floor(Math.random() * 500) + 1;
+      let y = Math.floor(Math.random() * 500) + 1;
+      let name = 'Rabbit' + this.rabbitId;
       let arrayRabbit = [];
       arrayRabbit.push(name, x, y);
       this.arrayRabbits.push(arrayRabbit);
@@ -202,9 +217,9 @@ export class CanvaComponent implements OnInit {
   // fonction pour créer une population de renards
   CreateFox(nombre) {
     for (let i = 0; i <= nombre - 1; i++) {
-      const x = Math.floor(Math.random() * 500) + 1;
-      const y = Math.floor(Math.random() * 500) + 1;
-      const name = 'Fox' + this.rabbitId;
+      let x = Math.floor(Math.random() * 500) + 1;
+      let y = Math.floor(Math.random() * 500) + 1;
+      let name = 'Fox' + this.rabbitId;
       let arrayFox = [];
       arrayFox.push(name, x, y);
       this.arrayFoxes.push(arrayFox);
