@@ -19,9 +19,9 @@ export class CanvaComponent implements OnInit {
   intervalMove;
   intervalMoveFoxHunt;
   intervalDeathRabbit;
-  intervalDeathFox;
   intervalRabbitRebirth;
   intervalFoxrebirth;
+  foxHealth = 20;
 
   constructor() {
   }
@@ -65,7 +65,7 @@ export class CanvaComponent implements OnInit {
   }
 
   // Fonction pour changer les params ecosystem
-  editParameters(rabbitPop, foxesPop, rabbitRebirth, distancePrey, deathHunger) {
+  editParameters(rabbitPop, foxesPop, rabbitRebirth, distancePrey, foxHealth) {
     if (rabbitRebirth == null) {
       rabbitRebirth = 1000;
     }
@@ -73,7 +73,8 @@ export class CanvaComponent implements OnInit {
     this.clearAll();
     this.CreateRabbit(rabbitPop);
     this.CreateFox(foxesPop);
-    // TODO ajouter distance/deathHunger
+    // TODO ajouter distance
+    this.foxHealth = foxHealth
     this.RabbitRebirth(rabbitRebirth);
     this.FoxRebirth(foxRebirth);
     this.MoveRandom();
@@ -124,24 +125,32 @@ export class CanvaComponent implements OnInit {
     context = this.myCanva.getContext('2d');
     for (let i = 0; i <= this.arrayFoxes.length - 1; i++) {
       find = 0;
-      for (let j = 0; j <= this.arrayRabbits.length - 1; j++) {
-        if (find !== 0) {
-          if (this.arrayRabbits[j][1] <= this.arrayFoxes[i][1] + 4 && this.arrayRabbits[j][2] <= this.arrayFoxes[i][2] + 4) {
+      if (this.arrayFoxes[i][3] <= 0) {
+        context = this.myCanva.getContext('2d');
+        context.clearRect(this.arrayFoxes[i][1], this.arrayFoxes[i][2], 4, 4);
+        let indexDeadFox = this.arrayFoxes.indexOf(this.arrayFoxes[i]);
+        this.arrayFoxes.splice(indexDeadFox, 1);
+      } else {
+        for (let j = 0; j <= this.arrayRabbits.length - 1; j++) {
+          if (find !== 0) {
+            if (this.arrayRabbits[j][1] <= this.arrayFoxes[i][1] + 4 && this.arrayRabbits[j][2] <= this.arrayFoxes[i][2] + 4) {
 
-            find = 1;
-          }
-          if (this.arrayRabbits[j][1] <= this.arrayFoxes[i][1] - 4 && this.arrayRabbits[j][2] <= this.arrayFoxes[i][2] - 4) {
+              find = 1;
+            }
+            if (this.arrayRabbits[j][1] <= this.arrayFoxes[i][1] - 4 && this.arrayRabbits[j][2] <= this.arrayFoxes[i][2] - 4) {
 
-            find = 1;
+              find = 1;
+            }
           }
         }
-      }
 
-      context.clearRect(this.arrayFoxes[i][1], this.arrayFoxes[i][2], 4, 4);
-      const x = this.arrayFoxes[i][1] + this.getRandomInt(-10, 10);
-      const y = this.arrayFoxes[i][2] + this.getRandomInt(-10, 10);
-      this.arrayFoxes[i][1] = x;
-      this.arrayFoxes[i][2] = y;
+        context.clearRect(this.arrayFoxes[i][1], this.arrayFoxes[i][2], 4, 4);
+        const x = this.arrayFoxes[i][1] + this.getRandomInt(-10, 10);
+        const y = this.arrayFoxes[i][2] + this.getRandomInt(-10, 10);
+        this.arrayFoxes[i][1] = x;
+        this.arrayFoxes[i][2] = y;
+        this.arrayFoxes[i][3]--;
+      }
     }
     // console.log("Foxes pop après mouvement",this.arrayRabbits)
     context.fillStyle = 'red';
@@ -191,16 +200,18 @@ export class CanvaComponent implements OnInit {
           context.clearRect(this.arrayRabbits[j][1], this.arrayRabbits[j][2], 4, 4);
           let indexDeadRabbit = this.arrayRabbits.indexOf(this.arrayRabbits[j]);
           console.log(this.arrayRabbits[indexDeadRabbit]);
-          this.arrayRabbits.splice(indexDeadRabbit[indexDeadRabbit]);
+          this.arrayRabbits.splice(indexDeadRabbit, 1);
+          this.arrayFoxes[i][3] = this.foxHealth;
           console.log(this.arrayRabbits);
         }
       }
     }
+    console.log(this.arrayFoxes)
   }
 
   // fonction pour créer une population de lapins
   CreateRabbit(nombre) {
-    for (let i = 0; i <= nombre - 1; i++) {
+    for (let i = 0; i < nombre; i++) {
       this.rabbitId++;
       let x = Math.floor(Math.random() * 500) + 1;
       let y = Math.floor(Math.random() * 500) + 1;
@@ -217,13 +228,13 @@ export class CanvaComponent implements OnInit {
 
   // fonction pour créer une population de renards
   CreateFox(nombre) {
-    for (let i = 0; i <= nombre - 1; i++) {
+    for (let i = 0; i < nombre; i++) {
       this.foxId++;
       let x = Math.floor(Math.random() * 500) + 1;
       let y = Math.floor(Math.random() * 500) + 1;
       let name = 'Fox' + this.foxId;
       let arrayFox = [];
-      arrayFox.push(name, x, y);
+      arrayFox.push(name, x, y, this.foxHealth);
       this.arrayFoxes.push(arrayFox);
       let context;
       context = this.myCanva.getContext('2d');
