@@ -17,11 +17,9 @@ export class CanvaComponent implements OnInit {
   arrayRabbits = [];
   arrayFoxes = [];
   intervalMove;
-  intervalMoveFoxHunt;
-  intervalDeathRabbit;
   intervalRabbitRebirth;
   intervalFoxrebirth;
-  foxHealth = 20;
+  foxHealth = 40;
 
   constructor() {
   }
@@ -31,13 +29,9 @@ export class CanvaComponent implements OnInit {
     this.CreateCanva();
     this.CreateRabbit(30);
     this.CreateFox(200);
-    this.intervalMove = setInterval(this.MoveRandomInitial.bind(this, false), 500);
-    this.intervalDeathRabbit = setInterval(this.RabbitElimination.bind(this, false), 400);
-    this.intervalMoveFoxHunt = setInterval(this.MoveFoxToTarget.bind(this, false), 400);
+    this.intervalMove = setInterval(this.MoveRandomInitial.bind(this, false), 500 );
     this.RabbitRebirth(1000);
     this.FoxRebirth(10000);
-    // console.log("Rabbits pop", this.arrayRabbits)
-    // console.log("Foxes pop", this.arrayFoxes)
   }
 
   // fonction pour effacer tous les animaux
@@ -74,7 +68,7 @@ export class CanvaComponent implements OnInit {
     this.CreateRabbit(rabbitPop);
     this.CreateFox(foxesPop);
     // TODO ajouter distance
-    this.foxHealth = foxHealth
+    this.foxHealth = foxHealth;
     this.RabbitRebirth(rabbitRebirth);
     this.FoxRebirth(foxRebirth);
     this.MoveRandom();
@@ -110,7 +104,6 @@ export class CanvaComponent implements OnInit {
       this.arrayRabbits[i][1] = x;
       this.arrayRabbits[i][2] = y;
     }
-    console.log('Rabbit pop après mouvement', this.arrayRabbits);
     context.fillStyle = 'green';
     for (let j = 0; j <= this.arrayRabbits.length - 1; j++) {
       context.fillRect(this.arrayRabbits[j][1], this.arrayRabbits[j][2], 4, 4);
@@ -131,46 +124,44 @@ export class CanvaComponent implements OnInit {
         let indexDeadFox = this.arrayFoxes.indexOf(this.arrayFoxes[i]);
         this.arrayFoxes.splice(indexDeadFox, 1);
       } else {
-        for (let j = 0; j <= this.arrayRabbits.length - 1; j++) {
-          if (find !== 0) {
-            if (this.arrayRabbits[j][1] <= this.arrayFoxes[i][1] + 4 && this.arrayRabbits[j][2] <= this.arrayFoxes[i][2] + 4) {
-
-              find = 1;
-            }
-            if (this.arrayRabbits[j][1] <= this.arrayFoxes[i][1] - 4 && this.arrayRabbits[j][2] <= this.arrayFoxes[i][2] - 4) {
-
-              find = 1;
-            }
-          }
-        }
-
         context.clearRect(this.arrayFoxes[i][1], this.arrayFoxes[i][2], 4, 4);
-        const x = this.arrayFoxes[i][1] + this.getRandomInt(-10, 10);
-        const y = this.arrayFoxes[i][2] + this.getRandomInt(-10, 10);
+        let x = this.arrayFoxes[i][1] + this.getRandomInt(-10, 10);
+        let y = this.arrayFoxes[i][2] + this.getRandomInt(-10, 10);
         this.arrayFoxes[i][1] = x;
         this.arrayFoxes[i][2] = y;
         this.arrayFoxes[i][3]--;
       }
     }
-    // console.log("Foxes pop après mouvement",this.arrayRabbits)
     context.fillStyle = 'red';
     for (let j = 0; j <= this.arrayFoxes.length - 1; j++) {
       context.fillRect(this.arrayFoxes[j][1], this.arrayFoxes[j][2], 4, 4);
     }
+    this.MoveFoxToTarget();
   }
 
   // Fonction pour généré un mouvement vers le lapin après repérage
   MoveFoxToTarget() {
     // TODO
+    let context = this.myCanva.getContext('2d');
     for (let i = 0; i <= this.arrayFoxes.length - 1; i++) {
       for (let j = 0; j <= this.arrayRabbits.length - 1; j++) {
         let x = Math.abs(this.arrayFoxes[i][1] - this.arrayRabbits[j][1]);
         let y = Math.abs(this.arrayFoxes[i][2] - this.arrayRabbits[j][2]);
         if (x <= 5 && y <= 5) {
           console.log('Fox has spoted a rabbit');
+          context.clearRect(this.arrayFoxes[i][1], this.arrayFoxes[i][2], 4, 4);
+          this.arrayFoxes[i][1] = this.arrayRabbits[j][1];
+          this.arrayFoxes[i][2] = this.arrayRabbits[j][2];
         }
       }
     }
+
+    context.fillStyle = 'red';
+    for (let j = 0; j <= this.arrayFoxes.length - 1; j++) {
+      context.fillRect(this.arrayFoxes[j][1], this.arrayFoxes[j][2], 4, 4);
+    }
+
+    this.RabbitElimination();
   }
 
   // Fonction pour faire apparaitre des lapins
@@ -180,7 +171,7 @@ export class CanvaComponent implements OnInit {
 
   // Fonction pour faire réapparaitre des renards
   FoxRebirth(timeF) {
-    this.intervalRabbitRebirth = setInterval(this.CreateFox(1), timeF);
+    this.intervalFoxrebirth = setInterval(this.CreateFox(1), timeF);
   }
 
   // Fonction gérant la mort des renards
@@ -199,14 +190,11 @@ export class CanvaComponent implements OnInit {
           context = this.myCanva.getContext('2d');
           context.clearRect(this.arrayRabbits[j][1], this.arrayRabbits[j][2], 4, 4);
           let indexDeadRabbit = this.arrayRabbits.indexOf(this.arrayRabbits[j]);
-          console.log(this.arrayRabbits[indexDeadRabbit]);
           this.arrayRabbits.splice(indexDeadRabbit, 1);
           this.arrayFoxes[i][3] = this.foxHealth;
-          console.log(this.arrayRabbits);
         }
       }
     }
-    console.log(this.arrayFoxes)
   }
 
   // fonction pour créer une population de lapins
@@ -223,6 +211,7 @@ export class CanvaComponent implements OnInit {
       context = this.myCanva.getContext('2d');
       context.fillStyle = 'green';
       context.fillRect(x, y, 4, 4);
+      console.log("rabit pop");
     }
   }
 
@@ -240,6 +229,7 @@ export class CanvaComponent implements OnInit {
       context = this.myCanva.getContext('2d');
       context.fillStyle = 'red';
       context.fillRect(x, y, 4, 4);
+      console.log("Foxes pop");
     }
   }
 
